@@ -10,15 +10,17 @@ end
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
     state.Buff.Seigan = buffactive.Seigan or false
-	state.Buff['Third Eye'] = buffactive.thirdeye or false
+	state.Buff.Hasso = buffactive.Hasso or false
 end
 
 -- Define sets and vars used by this job file.
 function init_gear_sets()
 
 sets.precast.JA['Meditate'] = {hands="Saotome Kote"}
-sets.precast.Seigan = {legs="Saotome Haidate"}
-sets.precast['Third Eye'] = {legs="Saotome Haidate"}
+sets.precast.JA['Seigan'] = {legs="Saotome Haidate"}
+sets.precast.JA['Third Eye'] = {legs="Saotome Haidate"}
+sets.buff.Seigan = {legs="Saotome Haidate"}
+sets.buff.Hasso = {legs="Luisant Brayettes"}
 
 sets.idle = {
 	head="Walahra Turban",
@@ -64,9 +66,6 @@ sets.precast.WS = {
     right_ring="Toreador's Ring",
     back="Cuchulain's Mantle",
 }
-
-sets.buff.Seigan = {legs="Saotome Haidate"}
-
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -76,11 +75,12 @@ end
 -- Run after the default precast() is done.
 -- eventArgs is the same one used in job_precast, in case information needs to be persisted.
 
-function job_post_precast(spell, action, spellMap, eventArgs)
+function job_post_aftercast(spell, action, spellMap, eventArgs)
 	if buffactive.Seigan then
 		equip(sets.buff.Seigan)
-	end
-	if buffactive.thirdeye then
-		equip(sets.buff.Seigan)
+		send_command('@input /echo "Seigan active" ')
+	elseif buffactive.Hasso then
+		equip(sets.buff.Hasso)
+		send_command('@input /echo "Hasso active" ')
 	end
 end
